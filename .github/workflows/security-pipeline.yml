@@ -38,4 +38,9 @@ jobs:
           pip install semgrep
 
       - name: Run Semgrep SAST
-        run: semgrep --config p/security-audit --config p/secrets .
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/csharp
