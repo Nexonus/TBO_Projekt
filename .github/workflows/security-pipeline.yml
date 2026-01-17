@@ -16,11 +16,13 @@ jobs:
           
       - name: Gitleaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --source ../../ --verbose
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
-          path: ./
+          path: ../../
       
       - name: Build Docker images
         run: |
