@@ -6,36 +6,36 @@ on:
   pull_request:
     branches: ["main"]
   
-  jobs:
-    security-tests:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+jobs:
+  security-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build API Docker image
+        run: docker build -t apd-api:latest -f Apd.Api/Dockerfile .
+      
+      - name: Build Frontend Docker image
+        run: docker build -t apd-front:latest test_front/test-frontend
         
-        - name: Build API Docker image
-          run: docker build -t apd-api:latest -f Apd.Api/Dockerfile .
-        
-        - name: Build Frontend Docker image
-          run: docker build -t apd-front:latest test_front/test-frontend
-          
-        - name: Install Trivy
-          run: |
-            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
-            sudo apt-get update
-            sudo apt-get install -y trivy
-        
-        
-        - name: Run Trivy scan on API
-          run: trivy image apd-api:latest
+      - name: Install Trivy
+        run: |
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+      
+      
+      - name: Run Trivy scan on API
+        run: trivy image apd-api:latest
 
-        - name: Run Trivy scan on Frontend
-          run: trivy image apd-front:latest
+      - name: Run Trivy scan on Frontend
+        run: trivy image apd-front:latest
 
-        - name: Install Semgrep
-          run: |
-            python3 -m pip install --upgrade pip
-            pip install semgrep
+      - name: Install Semgrep
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install semgrep
 
-        - name: Run Semgrep SAST
-          run: semgrep --config p/security-audit .
+      - name: Run Semgrep SAST
+        run: semgrep --config p/security-audit .
