@@ -38,4 +38,4 @@ jobs:
           pip install semgrep
 
       - name: Run Semgrep SAST
-        run: semgrep --config p/security-audit .
+        run: semgrep --config p/security-audit --config p/secrets .
