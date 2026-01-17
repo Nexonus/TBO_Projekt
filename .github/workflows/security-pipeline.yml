@@ -7,37 +7,33 @@ on:
     branches: ["main"]
   
 jobs:
-  security-tests:
+  security-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Gitleaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
       
-      - name: Build API Docker image
-        run: docker build -t apd-api:latest -f Apd.Api/Dockerfile .
-      
-      - name: Build Frontend Docker image
-        run: docker build -t apd-front:latest test_front/test-frontend
-        
-      - name: Install Trivy
+      - name: Build Docker images
         run: |
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install -y trivy
+          docker build -t apd-api:latest -f Apd.Api/Dockerfile .
+          docker build -t apd-front:latest test_front/test-frontend
       
-      
-      - name: Run Trivy scan on API
-        run: trivy image apd-api:latest
+      - name: Trivy Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: apd-api:latest
+          scanners: 'vuln,secret,config'
 
-      - name: Run Trivy scan on Frontend
-        run: trivy image apd-front:latest
-
-      - name: Install Semgrep
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install semgrep
-
-      - name: Run Semgrep SAST
+      - name: Semgrep
         uses: semgrep/semgrep-action@v1
         with:
           config: >-
