@@ -5,40 +5,52 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-  
+
 jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          
+          fetch-depth: 0 
+
       - name: Gitleaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
         with:
-          args: detect --source ../../ --verbose
+          args: detect --source . --verbose --redact
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
-          path: ../../
-      
-      - name: Build Docker images
-        run: |
-          docker build -t apd-api:latest -f Apd.Api/Dockerfile .
-          docker build -t apd-front:latest test_front/test-frontend
-      
-      - name: Trivy Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: apd-api:latest
-          scanners: 'vuln,secret,config'
+          path: ./
+          base: ""
 
-      - name: Semgrep
+      - name: Semgrep (Full Scan)
         uses: semgrep/semgrep-action@v1
         with:
           config: >-
             p/security-audit
             p/secrets
             p/csharp
+
+      - name: Trivy FS (Scan all files/configs)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,config'
+
+      - name: Build Docker images
+        run: |
+          docker build -t apd-api:latest -f Apd.Api/Dockerfile .
+          docker build -t apd-front:latest test_front/test-frontend
+
+      - name: Trivy Image Scan (Scan built images)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: apd-api:latest
+          format: 'table'
+          exit-code: '1' 
+          ignore-unfixed: true
+          vuln-type: 'os,library'
