@@ -20,14 +20,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_COMMAND: "detect"
-          GITLEAKS_LOG_OPTS: "--all" 
+          GITLEAKS_LOG_OPTS: "--all --full-history" 
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: "" 
-          extra_args: --only-verified=false --debug
+          extra_args: --results=verified,unknown --debug
 
       - name: Semgrep (Full Scan)
         uses: semgrep/semgrep-action@v1
