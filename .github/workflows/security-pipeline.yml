@@ -5,3 +5,53 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+    
+jobs:
+  security-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [api, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set build context
+        id: context
+        run: |
+          if [ "${{ matrix.service }}" == "api" ]; then
+            echo "dockerfile=Apd.Api/Dockerfile" >> $GITHUB_OUTPUT
+            echo "context=." >> $GITHUB_OUTPUT
+            echo "image=apd-api:latest" >> $GITHUB_OUTPUT
+          else
+            echo "dockerfile=Dockerfile" >> $GITHUB_OUTPUT
+            echo "context=test_front/test-frontend" >> $GITHUB_OUTPUT
+            echo "image=apd-front:latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ steps.context.outputs.image }} \
+            -f ${{ steps.context.outputs.dockerfile }} \
+            ${{ steps.context.outputs.context }}
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.context.outputs.image }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+  
+  sast-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/security-audit
