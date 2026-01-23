@@ -17,10 +17,10 @@ public class TestController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get(string username)
+    public IActionResult Get(string email)
     {
         var users = _apdDbContext.Users
-            .FromSqlRaw($"SELECT * FROM Users WHERE Username = '{username}'")
+            .FromSqlRaw($"SELECT * FROM \"AspNetUsers\" WHERE \"Email\" = '{email}'")
             .ToList();
         
         return Ok(users);
