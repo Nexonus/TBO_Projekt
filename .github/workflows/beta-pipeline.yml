@@ -59,10 +59,12 @@ jobs:
   dynamic-scan:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Start Application Services
         run: |
           docker compose up -d
-          sleep 30
+          sleep 30 
 
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.7.0
