@@ -66,6 +66,7 @@ jobs:
           vuln-type: 'os,library'
 
   dynamic-scan:
+    runs-on: ubuntu-latest
     steps:
       - name: Start Application Services
         run: |
