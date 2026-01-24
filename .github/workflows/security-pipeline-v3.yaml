@@ -1,0 +1,118 @@
+name: 🛡️ DevSecOps TBO Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: write
+  issues: write
+  security-events: write
+  actions: read
+
+env:
+  IMAGE_NAME: apd.api:latest
+
+jobs:
+  static-security-scan:
+    name: 🛡️ Static Security (SAST/SCA)
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧾 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔑 Gitleaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_COMMAND: "detect"
+          GITLEAKS_LOG_OPTS: "--all --full-history"
+
+      - name: 🔬 Semgrep SAST (C# & General)
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/csharp
+
+      - name: 📦 Trivy Filesystem Scan (SCA)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,config'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+
+  build-and-container-scan:
+    name: 🐳 Build & Container Security
+    runs-on: ubuntu-latest
+    needs: static-security-scan
+
+    steps:
+      - name: 🧾 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Build Application
+        run: |
+          docker compose build apd.api
+          # Upewniamy się, że obraz ma odpowiedni tag dla skanera
+          docker tag apd.api:latest ${{ env.IMAGE_NAME }}
+
+      - name: 🔍 Trivy Image Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: 📦 Push Docker Image
+        run: docker push ${{ env.IMAGE_NAME }}
+
+  dynamic-security-scan:
+    name: 🔥 OWASP ZAP (DAST)
+    runs-on: ubuntu-latest
+    needs: build-and-container-scan
+
+    steps:
+      - name: 🧾 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Start Environment (Docker Compose)
+        run: |
+          docker compose up -d --build
+          echo "⏳ Waiting for services to start..."
+          sleep 15
+
+      - name: 🩺 Check API Health
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/ > /dev/null; then
+              echo "✅ API is up!"
+              break
+            fi
+            echo "Waiting for API... ($i/30)"
+            sleep 2
+          done
+
+      - name: 🔥 OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'http://localhost:8080'
+          cmd_options: '-a'
+          fail_action: true
+          allow_issue_writing: false
+          artifact_name: 'my_zap-scan-results'
+
+      - name: 🛑 Stop Environment
+        if: always()
+        run: docker compose down
