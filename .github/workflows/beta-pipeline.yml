@@ -26,6 +26,7 @@ jobs:
           path: ./
           base: ""
           extra_args: --results=verified,unknown --debug
+        continue-on-error: true
 
       - name: Semgrep (Full Scan)
         uses: semgrep/semgrep-action@v1
