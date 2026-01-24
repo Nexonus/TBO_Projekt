@@ -82,6 +82,7 @@ jobs:
           cmd_options: '-a'
           fail_action: false
           allow_issue_writing: false # Disable creating issues (TODO: to be deleted when issues creation will be available)
+          artifact_name: 'zap-scan-results'
 
       - name: Stop Application Services
         if: always()
