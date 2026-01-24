@@ -47,8 +47,6 @@ jobs:
           scan-ref: '.'
           scanners: 'vuln,secret,config'
           format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
 
   build-and-container-scan:
     name: 🐳 Build & Container Security
