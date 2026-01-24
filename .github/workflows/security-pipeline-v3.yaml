@@ -70,8 +70,8 @@ jobs:
           scan-ref: '.'
           scanners: 'vuln,secret,config'
 
-      - name: 📦 Push Docker Image
-        run: docker push ${{ env.IMAGE_NAME }}
+#      - name: 📦 Push Docker Image
+#        run: docker push ${{ env.IMAGE_NAME }}
 
   dynamic-security-scan:
     name: 🔥 OWASP ZAP (DAST)
