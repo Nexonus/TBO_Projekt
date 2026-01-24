@@ -81,6 +81,7 @@ jobs:
           target: 'http://localhost:8080'
           cmd_options: '-a'
           fail_action: false
+          allow_issue_writing: false # Disable creating issues (TODO: to be deleted when issues creation will be available)
 
       - name: Stop Application Services
         if: always()
