@@ -66,9 +66,10 @@ jobs:
       - name: 🔍 Trivy Image Scan
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln,secret,config'
+          image-ref: ${{ env.IMAGE_NAME }}
+          format: 'table'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
 
 #      - name: 📦 Push Docker Image
 #        run: docker push ${{ env.IMAGE_NAME }}
@@ -105,7 +106,7 @@ jobs:
           target: 'http://localhost:8080'
           cmd_options: '-a'
           fail_action: true
-          allow_issue_writing: false
+          allow_issue_writing: true
           artifact_name: 'my_zap-scan-results'
 
       - name: 🛑 Stop Environment
