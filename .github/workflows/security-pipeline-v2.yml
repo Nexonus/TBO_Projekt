@@ -80,11 +80,11 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
 
-      - name: Set permissions for ZAP workspace # NEW STEP ADDED HERE
-        run: |
-          # Grant full permissions to the GitHub Actions workspace directory
-          # This resolves 'Permission denied: /zap/wrk/zap.yaml'
-          chmod -R 777 ${{ github.workspace }}
+#      - name: Set permissions for ZAP workspace # NEW STEP ADDED HERE
+#        run: |
+#          # Grant full permissions to the GitHub Actions workspace directory
+#          # This resolves 'Permission denied: /zap/wrk/zap.yaml'
+#          chmod -R 777 ${{ github.workspace }}
 
       # --- 6. DAST (OWASP ZAP) ---
       - name: OWASP ZAP Baseline Scan
