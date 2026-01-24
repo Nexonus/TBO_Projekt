@@ -92,7 +92,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
-          fail_action: false
+          fail_action: true
           allow_issue_writing: false # Disable creating issues (TODO: to be deleted when issues creation will be available)
           artifact_name: 'zap-scan-results'
           token: ${{ github.token }}
