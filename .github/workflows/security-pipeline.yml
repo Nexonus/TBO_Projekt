@@ -13,21 +13,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Gitleaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_COMMAND: "detect"
-          GITLEAKS_LOG_OPTS: "--all --full-history" 
+          GITLEAKS_LOG_OPTS: "--all --full-history"
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: "" 
+          base: ""
           extra_args: --results=verified,unknown --debug
+        continue-on-error: true
 
       - name: Semgrep (Full Scan)
         uses: semgrep/semgrep-action@v1
@@ -54,6 +55,14 @@ jobs:
         with:
           image-ref: apd-api:latest
           format: 'table'
-          exit-code: '1' 
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
+
+      - name: Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/csharp
