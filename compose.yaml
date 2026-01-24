@@ -23,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: Apd.Api/Dockerfile
+    image: apd.api:latest
     container_name: apd.api
     ports:
       - "8080:8080"
