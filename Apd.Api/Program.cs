@@ -4,6 +4,7 @@ using Adp.Infrastructure;
 using Apd.Api;
 using Apd.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -90,6 +91,31 @@ builder.Services.AddControllers();
 
 
 var app = builder.Build();
+
+// Apply migrations and seed data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApdDbContext>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        
+        logger.LogInformation("Applying database migrations...");
+        context.Database.Migrate();
+        logger.LogInformation("Database migrations applied successfully.");
+        
+        logger.LogInformation("Seeding roles...");
+        await Seeder.CreateRolesAsync(app);
+        logger.LogInformation("Roles seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+        throw;
+    }
+}
 
 app.UseCors("AllowAll");
 

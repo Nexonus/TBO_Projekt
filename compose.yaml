@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/apd-db:/var/lib/postgresql/data
+      - ./.containers/apd-db:/var/lib/postgresql
     ports:
       - "5432:5432"
     healthcheck:
@@ -18,25 +18,8 @@ services:
       timeout: 10s
       retries: 10
 
-  apd.migrations:
-    build:
-      context: .
-      dockerfile: Apd.Api/Dockerfile
-      target: migrations
-    container_name: apd.migrations
-    depends_on:
-      apd.database:
-        condition: service_healthy
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    entrypoint:
-      [
-        "/bin/bash",
-        "-c",
-        "ls /app/publish && dotnet ef database update --project /src/Adp.Infrastructure/Adp.Infrastructure.csproj --context ApdDbContext",
-      ]
-
   apd.api:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Apd.Api/Dockerfile
@@ -47,8 +30,6 @@ services:
     depends_on:
       apd.database:
         condition: service_healthy
-      apd.migrations:
-        condition: service_completed_successfully
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
   
