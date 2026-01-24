@@ -80,6 +80,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
 
+      - name: Set permissions for ZAP workspace # NEW STEP ADDED HERE
+        run: |
+          # Grant full permissions to the GitHub Actions workspace directory
+          # This resolves 'Permission denied: /zap/wrk/zap.yaml'
+          chmod -R 777 ${{ github.workspace }}
+
       # --- 6. DAST (OWASP ZAP) ---
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
@@ -89,6 +95,7 @@ jobs:
           fail_action: false
           allow_issue_writing: false # Disable creating issues (TODO: to be deleted when issues creation will be available)
           artifact_name: 'zap-scan-results'
+          token: ${{ github.token }}
 
       - name: Stop Application Services
         if: always()
