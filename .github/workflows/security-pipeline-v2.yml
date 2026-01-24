@@ -1,5 +1,11 @@
 name: Beta security pipeline
 
+permissions:
+  contents: write
+  issues: write
+  checks: write
+  pull-requests: write
+
 on:
   push:
     branches-ignore: ["main"]
