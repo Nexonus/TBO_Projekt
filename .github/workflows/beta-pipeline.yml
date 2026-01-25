@@ -91,7 +91,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            apd-api/${{ secrets.DOCKERHUB_PROJECT_NAME }}:beta
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:beta
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -103,7 +103,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            apd-front/${{ secrets.DOCKERHUB_PROJECT_NAME }}:beta
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:frontend-beta
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
