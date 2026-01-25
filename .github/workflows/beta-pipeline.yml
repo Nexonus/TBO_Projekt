@@ -61,6 +61,11 @@ jobs:
     needs: security-scan
 
     steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -81,8 +86,8 @@ jobs:
       - name: Build and push API image
         uses: docker/build-push-action@v6
         with:
-          context: Apd.Api
-          file: Apd.Api/Dockerfile
+          context: .
+          file: ./Apd.Api/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
