@@ -110,10 +110,10 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:8080'
-          cmd_options: '-u $(id -u):$(id -g) -a'
+          cmd_options: '-a'
           fail_action: false
           allow_issue_writing: true
-          artifact_name: 'my_zap-scan-results'
+          artifact_name: 'zap-scan-results'
 
       - name: 🛑 Stop Environment
         if: always()
