@@ -100,11 +100,17 @@ jobs:
             sleep 2
           done
 
+      - name: 📁 Prepare ZAP Workspace
+        run: |
+          mkdir -p ${{ github.workspace }}/zap/wrk
+          # Change ownership to the ZAP user (UID 1000)
+          sudo chown -R 1000:1000 ${{ github.workspace }}/zap/wrk
+
       - name: 🔥 OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           target: 'http://localhost:8080'
-          cmd_options: '-a'
+          cmd_options: '-u $(id -u):$(id -g) -a'
           fail_action: false
           allow_issue_writing: true
           artifact_name: 'my_zap-scan-results'
