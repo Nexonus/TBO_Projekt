@@ -54,6 +54,9 @@ jobs:
     needs: static-security-scan
 
     steps:
+      - name: 🏷️ Determine Docker Tag
+        run: echo "IMAGE_NAME=apd.api:beta" >> $GITHUB_ENV
+
       - name: 🧾 Checkout Code
         uses: actions/checkout@v4
 
@@ -61,7 +64,7 @@ jobs:
         run: |
           docker compose build apd.api
           # Upewniamy się, że obraz ma odpowiedni tag dla skanera
-          docker tag apd.api:beta ${{ env.IMAGE_NAME }}
+          docker tag apd.api:latest ${{ env.IMAGE_NAME }}
 
       - name: 🔍 Trivy Image Scan
         uses: aquasecurity/trivy-action@master
@@ -70,9 +73,6 @@ jobs:
           format: 'table'
           ignore-unfixed: true
           vuln-type: 'os,library'
-
-#      - name: 📦 Push Docker Image
-#        run: docker push ${{ env.IMAGE_NAME }}
 
   dynamic-security-scan:
     name: 🔥 OWASP ZAP (DAST)
