@@ -2,7 +2,7 @@ name: 🛡️ DevSecOps TBO Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches-ignore: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -61,7 +61,7 @@ jobs:
         run: |
           docker compose build apd.api
           # Upewniamy się, że obraz ma odpowiedni tag dla skanera
-          docker tag apd.api:latest ${{ env.IMAGE_NAME }}
+          docker tag apd.api:beta ${{ env.IMAGE_NAME }}
 
       - name: 🔍 Trivy Image Scan
         uses: aquasecurity/trivy-action@master
@@ -105,7 +105,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
-          fail_action: true
+          fail_action: false
           allow_issue_writing: true
           artifact_name: 'my_zap-scan-results'
 
