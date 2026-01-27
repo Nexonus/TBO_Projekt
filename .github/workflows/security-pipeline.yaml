@@ -30,6 +30,13 @@ jobs:
           git log --oneline --graph --all -n 20
           echo "Total commits available: $(git rev-list --count --all)"
 
+      - name: 📥 Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz \
+          | tar -xz
+          sudo mv gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
       - name: 🔑 Gitleaks Secret Scan (Full History)
         run: |
           gitleaks detect \
