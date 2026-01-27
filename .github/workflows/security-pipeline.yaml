@@ -109,36 +109,23 @@ jobs:
       - name: 🧾 Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🚀 Start Environment (Docker Compose)
+      - name: 🚀 Start Environment
         run: |
           docker compose up -d --build
-          echo "⏳ Waiting for services to start..."
-          sleep 15
-
-      - name: 🩺 Check API Health
-        run: |
-          for i in {1..30}; do
-            if curl -s http://localhost:8080/ > /dev/null; then
-              echo "✅ API is up!"
-              break
-            fi
-            echo "Waiting for API... ($i/30)"
-            sleep 2
-          done
 
       - name: 📁 Prepare ZAP Workspace
         run: |
           mkdir -p ${{ github.workspace }}/zap/wrk
-          # Change ownership to the ZAP user (UID 1000)
           sudo chown -R 1000:1000 ${{ github.workspace }}/zap/wrk
 
-      - name: 🔥 OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.15.0
+      - name: 🔥 OWASP ZAP Full Scan # Using Full Scan instead of Baseline - JK
+        uses: zaproxy/action-full-scan@v0.13.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:8080'
-          cmd_options: '-j -a'
-          artifact_name: 'zap-scan-results'
+          cmd_options: '-a -j --network="host"' 
+          allow_issue_writing: true
+          artifact_name: 'zap-full-scan-results'
 
   upload-dockerhub-images:
       name: 📦 Upload DockerHub Images
