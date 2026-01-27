@@ -61,6 +61,13 @@ jobs:
           scanners: 'vuln,secret,config'
           format: 'table'
 
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ""
+          extra_args: --results=verified,unknown --debug
+
       - name: Semgrep (Full Scan)
         uses: semgrep/semgrep-action@v1
         with:
@@ -138,7 +145,7 @@ jobs:
 
   upload-dockerhub-images:
     runs-on: ubuntu-latest
-    needs: security-scan
+    needs: dynamic-security-scan
 
     steps:
       - name: Checkout Code
