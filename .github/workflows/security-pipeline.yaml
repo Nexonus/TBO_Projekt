@@ -124,8 +124,8 @@ jobs:
         uses: zaproxy/action-full-scan@v0.13.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:8080'
-          cmd_options: '-a -j' 
+          target: 'http://host.docker.internal:8080'
+          cmd_options: '-a -j --add-host=host.docker.internal:host-gateway' # Added host.docker.internal to make sure we're scanning the right container
           allow_issue_writing: true
           artifact_name: 'zap-full-scan-results'
 
