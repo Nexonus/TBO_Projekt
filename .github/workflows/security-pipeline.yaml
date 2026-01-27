@@ -65,6 +65,7 @@ jobs:
         uses: semgrep/semgrep-action@v1
         continue-on-error: true
         with:
+          command: scan
           config: >-
             p/security-code-scan
             p/csharp
