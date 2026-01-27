@@ -67,14 +67,12 @@ jobs:
         with:
           config: >-
             p/security-code-scan
-            p/sql-injection
-            p/command-injection
-            p/secrets
             p/csharp
-            p/javascript
-            p/cwe-top-25
+            p/command-injection
+            p/sql-injection
             p/owasp-top-ten
-            p/ci
+            p/cwe-top-25
+            p/r2c-security-audit
 
   build-and-container-scan:
     name: 🐳 Build & Container Security
