@@ -25,11 +25,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 🔍 Verify History
+        run: |
+          git log --oneline --graph --all -n 20
+          echo "Total commits available: $(git rev-list --count --all)"
+
       - name: 🔑 Gitleaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_ARGS: "detect --source=. --verbose"
+          GITLEAKS_ARGS: "detect --source=. --log-opts=--all --verbose"
 
       - name: 🔬 Semgrep SAST (C# & General)
         uses: semgrep/semgrep-action@v1
