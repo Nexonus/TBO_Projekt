@@ -34,7 +34,7 @@ jobs:
         run: |
           VERSION="8.18.2"
           curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" | tar -xz
-          sudo mv gitleaks /usr/local/bin/gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks # Fixing the download architecture over here ^ - JK
 
       - name: 🔑 Gitleaks Secret Scan (Full History)
         continue-on-error: true
