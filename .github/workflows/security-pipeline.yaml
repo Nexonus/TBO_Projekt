@@ -69,6 +69,7 @@ jobs:
       - name: Semgrep Full Scan
         run: |
           semgrep scan \
+            --config semgrep/csharp-command-injection.yml
             --config p/security-code-scan \
             --config p/csharp \
             --config p/command-injection \
