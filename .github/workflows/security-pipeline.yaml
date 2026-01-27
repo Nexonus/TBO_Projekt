@@ -30,8 +30,14 @@ jobs:
           git log --oneline --graph --all -n 20
           echo "Total commits available: $(git rev-list --count --all)"
 
-      - name: 🔑 Gitleaks Secret Scan
+      - name: 🔑 Gitleaks Secret Scan (Full History)
         uses: gitleaks/gitleaks-action@v2
+        with:
+          args: >
+            detect
+            --source .
+            --log-opts=--all
+            --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
