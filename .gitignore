@@ -5,5 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 node_modules
 *.DS_Store
-.cointainer/
-.cointainers/
+.container/
+.containers/
+.vscode/
+.idea/
