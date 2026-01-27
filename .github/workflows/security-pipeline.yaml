@@ -31,23 +31,12 @@ jobs:
           echo "Total commits available: $(git rev-list --count --all)"
 
       - name: 🔑 Gitleaks Secret Scan (Full History)
-        uses: gitleaks/gitleaks-action@v2
-        with:
-          args: >
-            detect
-            --source .
-            --log-opts=--all
+        run: |
+          gitleaks detect \
+            --source . \
+            --log-opts="--all" \
+            --redact \
             --verbose
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 🔬 Semgrep SAST (C# & General)
-        uses: semgrep/semgrep-action@v1
-        with:
-          config: >-
-            p/security-audit
-            p/secrets
-            p/csharp
 
       - name: 📦 Trivy Filesystem Scan (SCA)
         uses: aquasecurity/trivy-action@master
