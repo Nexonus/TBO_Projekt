@@ -61,6 +61,17 @@ jobs:
           scanners: 'vuln,secret,config'
           format: 'table'
 
+      - name: Semgrep (Full Scan)
+        uses: semgrep/semgrep-action@v1
+        continue-on-error: true
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/csharp
+            p/owasp-top-10
+            p/ci
+
   build-and-container-scan:
     name: 🐳 Build & Container Security
     runs-on: ubuntu-latest
@@ -122,10 +133,9 @@ jobs:
       - name: 🔥 OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.15.0
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:8080'
-          cmd_options: '-a'
-          fail_action: false
-          allow_issue_writing: true
+          cmd_options: '-j -a'
           artifact_name: 'zap-scan-results'
 
       - name: 🛑 Stop Environment
