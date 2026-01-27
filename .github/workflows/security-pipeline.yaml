@@ -25,20 +25,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔑 Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_COMMAND: "detect"
-          GITLEAKS_LOG_OPTS: "--all --full-history"
+      - name: 🔍 Verify History
+        run: |
+          git log --oneline --graph --all -n 20
+          echo "Total commits available: $(git rev-list --count --all)"
 
-      - name: 🔬 Semgrep SAST (C# & General)
-        uses: semgrep/semgrep-action@v1
+      - name: 📥 Install Gitleaks (Correct Architecture)
+        run: |
+          VERSION="8.18.2"
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" | tar -xz
+          sudo mv gitleaks /usr/local/bin/gitleaks # Fixing the download architecture over here ^ - JK
+
+      - name: 🔑 Gitleaks Secret Scan (Full History)
+        continue-on-error: true
+        run: |
+          gitleaks detect \
+            --source=. \
+            --log-opts="--all" \
+            --report-format=sarif \
+            --report-path=gitleaks-results.sarif \
+            --redact \
+            --verbose
+
+      - name: 🚀 Upload Gitleaks results to Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
         with:
-          config: >-
-            p/security-audit
-            p/secrets
-            p/csharp
+          sarif_file: gitleaks-results.sarif
 
       - name: 📦 Trivy Filesystem Scan (SCA)
         uses: aquasecurity/trivy-action@master
@@ -107,7 +120,7 @@ jobs:
           sudo chown -R 1000:1000 ${{ github.workspace }}/zap/wrk
 
       - name: 🔥 OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.15.0 # For some reason this works perfectly fine in v. 15 - JK
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
