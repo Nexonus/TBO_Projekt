@@ -66,10 +66,10 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install semgrep
 
-      - name: Semgrep Full Scan
+      - name: 🔎 Semgrep Full Scan
+        continue-on-error: true
         run: |
           semgrep scan \
-            --config semgrep/csharp-command-injection.yml
             --config p/security-code-scan \
             --config p/csharp \
             --config p/command-injection \
@@ -77,8 +77,9 @@ jobs:
             --config p/owasp-top-ten \
             --config p/cwe-top-25 \
             --config p/r2c-security-audit \
+            --config semgrep/csharp-vulnerability.yml \
             --sarif \
-            --output semgrep.sarif || true
+            --output semgrep.sarif
 
       - name: 🚀 Upload Semgrep results to Security Tab
         uses: github/codeql-action/upload-sarif@v3
