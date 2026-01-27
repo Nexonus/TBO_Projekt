@@ -107,7 +107,7 @@ jobs:
           sudo chown -R 1000:1000 ${{ github.workspace }}/zap/wrk
 
       - name: 🔥 OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: 'http://localhost:8080'
           cmd_options: '-a'
