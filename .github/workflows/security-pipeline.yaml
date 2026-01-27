@@ -66,10 +66,12 @@ jobs:
         continue-on-error: true
         with:
           config: >-
-            p/security-audit
+            p/security-code-scan
             p/secrets
             p/csharp
-            p/owasp-top-10
+            p/javascript
+            p/cwe-top-25
+            p/owasp-top-ten
             p/ci
 
   build-and-container-scan:
