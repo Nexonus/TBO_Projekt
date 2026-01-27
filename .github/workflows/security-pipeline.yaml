@@ -65,7 +65,7 @@ jobs:
         uses: semgrep/semgrep-action@v1
         continue-on-error: true
         with:
-          command: scan
+          args: scan --json --output=semgrep.json
           generateSarif: "1"
           config: >-
             p/security-code-scan
