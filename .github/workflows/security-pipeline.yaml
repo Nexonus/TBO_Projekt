@@ -125,7 +125,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://host.docker.internal:8080'
-          cmd_options: '-a -j --add-host=host.docker.internal:host-gateway' # Added host.docker.internal to make sure we're scanning the right container
+          cmd_options: '-a -j'
+          docker_name: '--add-host=host.docker.internal:host-gateway'
           allow_issue_writing: true
           artifact_name: 'zap-full-scan-results'
 
