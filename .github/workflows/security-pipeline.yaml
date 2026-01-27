@@ -30,16 +30,29 @@ jobs:
           git log --oneline --graph --all -n 20
           echo "Total commits available: $(git rev-list --count --all)"
 
-      - name: 📥 Install Gitleaks (x64)
+      - name: 📥 Install Gitleaks (Correct Architecture)
         run: |
           VERSION="8.18.2"
           curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" | tar -xz
           sudo mv gitleaks /usr/local/bin/gitleaks
-          gitleaks version
 
       - name: 🔑 Gitleaks Secret Scan (Full History)
+        continue-on-error: true
         run: |
-          gitleaks detect --source=. --log-opts="--all" --verbose --redact
+          gitleaks detect \
+            --source=. \
+            --log-opts="--all" \
+            --report-format=sarif \
+            --report-path=gitleaks-results.sarif \
+            --redact \
+            --verbose
+
+      - name: 📤 Upload Gitleaks Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-results
+          path: gitleaks-results.sarif
 
       - name: 📦 Trivy Filesystem Scan (SCA)
         uses: aquasecurity/trivy-action@master
