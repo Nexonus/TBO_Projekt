@@ -1,22 +1,26 @@
 rules:
-  - id: csharp-command-injection-processstartinfo-args
+  - id: csharp-command-injection-processstartinfo
     languages: [csharp]
     severity: ERROR
     message: >
-      Possible command injection: user input is interpolated into shell
-      command arguments executed via cmd.exe or /bin/bash.
+      Possible command injection: user-controlled input flows into
+      ProcessStartInfo.Arguments and is executed by a shell.
     mode: taint
+
     pattern-sources:
       - pattern: |
-          public IActionResult $M(..., string $X, ...)
+          IActionResult $M(..., string $X, ...)
+
     pattern-sinks:
       - pattern: |
-          new ProcessStartInfo {
-            FileName = "cmd.exe",
-            Arguments = $ARGS
-          }
+          Arguments = $ARGS
+
+    pattern-propagators:
       - pattern: |
-          new ProcessStartInfo {
-            FileName = "/bin/bash",
-            Arguments = $ARGS
-          }
+          $A ? $B : $C
+        from: $B
+        to: $A
+      - pattern: |
+          $A ? $B : $C
+        from: $C
+        to: $A
