@@ -66,6 +66,7 @@ jobs:
         continue-on-error: true
         with:
           command: scan
+          generateSarif: "1"
           config: >-
             p/security-code-scan
             p/csharp
