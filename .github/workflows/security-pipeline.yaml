@@ -61,25 +61,27 @@ jobs:
           scanners: 'vuln,secret,config'
           format: 'table'
 
-      - name: Semgrep (Full Scan)
-        uses: semgrep/semgrep-action@v1
-        continue-on-error: true
-        with:
-          config: |
-            p/security-code-scan
-            p/csharp
-            p/command-injection
-            p/sql-injection
-            p/owasp-top-ten
-            p/cwe-top-25
-            p/r2c-security-audit
-          args: >
-            --sarif
-            --output=semgrep.sarif
-            --no-suppress-errors
-          
-      - name: Upload Semgrep Sarif File
+      - name: 📥 Install Semgrep
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Semgrep Full Scan
+        run: |
+          semgrep scan \
+            --config p/security-code-scan \
+            --config p/csharp \
+            --config p/command-injection \
+            --config p/sql-injection \
+            --config p/owasp-top-ten \
+            --config p/cwe-top-25 \
+            --config p/r2c-security-audit \
+            --sarif \
+            --output semgrep.sarif || true
+
+      - name: 🚀 Upload Semgrep results to Security Tab
         uses: github/codeql-action/upload-sarif@v3
+        if: always()
         with:
           sarif_file: semgrep.sarif
 
