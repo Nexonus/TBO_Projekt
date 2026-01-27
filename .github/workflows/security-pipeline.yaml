@@ -65,8 +65,7 @@ jobs:
         uses: semgrep/semgrep-action@v1
         continue-on-error: true
         with:
-          audit: true
-          config: >-
+          config: |
             p/security-code-scan
             p/csharp
             p/command-injection
@@ -74,6 +73,12 @@ jobs:
             p/owasp-top-ten
             p/cwe-top-25
             p/r2c-security-audit
+          generateSarif: true
+          
+      - name: Upload Semgrep Sarif File
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
 
   build-and-container-scan:
     name: 🐳 Build & Container Security
