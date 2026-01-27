@@ -22,6 +22,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 COPY ["Apd.Api/Apd.Api.csproj", "Apd.Api/"]
 COPY ["Adp.Application/Adp.Application.csproj", "Adp.Application/"]
 COPY ["Adp.Infrastructure/Adp.Infrastructure.csproj", "Adp.Infrastructure/"]
+COPY ["Adp.Domain/Adp.Domain.csproj", "Adp.Domain/"]
 RUN dotnet restore "Apd.Api/Apd.Api.csproj"
 
 # Kopiowanie reszty kodu źródłowego i budowanie aplikacji
