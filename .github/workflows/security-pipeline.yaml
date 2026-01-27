@@ -79,6 +79,7 @@ jobs:
             --config p/r2c-security-audit \
             --config semgrep/csharp-command-injection.yml \
             --sarif \
+            --verbose \
             --output semgrep.sarif
 
       - name: 🚀 Upload Semgrep results to Security Tab
