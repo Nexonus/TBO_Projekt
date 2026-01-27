@@ -67,6 +67,8 @@ jobs:
         with:
           config: >-
             p/security-code-scan
+            p/sql-injection
+            p/command-injection
             p/secrets
             p/csharp
             p/javascript
