@@ -150,6 +150,10 @@ Zgodnie z wymaganiami projektu, utworzyliśmy osobną gałąź, na której celow
 Przykładowy alert wygenerowany dla odnalezionej podatności SQL Injection:
 <img width="1362" height="427" alt="image" src="https://github.com/user-attachments/assets/30fdbbe4-a324-407a-aeea-5eac6ea79542" />
 <br>
+Dodatkowo, z racji na zabezpieczenie gałęzi Main - możliwe jest włączenie zmian do repozytorium jedynie w dwóch warunkach:
+<br>
+1. Właściciel repozytorium klika opcję force merge into main
+2. Uzyskane jest Approve od reszty zespołu (wymagane 4 zatwierdzenia)
 <img width="959" height="710" alt="image" src="https://github.com/user-attachments/assets/6c2d8686-8fe4-48f7-81cb-2492b12ba7c6" />
 <br>
 Wykrycie wycieku danych wrażliwych przez Gitleaks:
