@@ -180,12 +180,6 @@ Na powyższym zrzucie ekranu widać odnalezione przez pipeline podatności.
 <br>
 
 <br>
-Raport dla skanowania OWASP ZAP:
-<br>
-<img width="2059" height="1105" alt="image" src="https://github.com/user-attachments/assets/ff937bd1-d3c9-4fe9-838c-25c79c87cd42" />
-<br>
-
-<br>
 Dodatkowo, w ramach zadania Pipeline posiada uprawnienia do tworzenia nowych Issues, w których ZAP wskazuje na wykryte przez niego podatności repozytorium:
 <img width="1346" height="1210" alt="image" src="https://github.com/user-attachments/assets/4b7e94f4-e43f-4b7a-9dec-a9cfeaf61876" />
 Na zrzucie widać dwa wątki, jeden to Full Scan dotyczący błędów konfiguracji i podatności usługi, natomiast w Baseline Report znajdziemy informacje o podatnościach od strony ruchu sieciowego.
