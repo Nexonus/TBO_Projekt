@@ -1,4 +1,4 @@
-# Projekt TBO - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
+<img width="2059" height="1105" alt="image" src="https://github.com/user-attachments/assets/400d1d18-821a-4ddf-a5eb-d6090bc99356" /># Projekt TBO - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
 
 Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Backend: .NET, Frontend: React, Baza: PostgreSQL) oraz implementacja automatycznego pipeline'u wykrywającego podatności bezpieczeństwa.
 
@@ -177,6 +177,12 @@ W zakładce Security / Code Scanning (w filtrze wpisujemy pr:NN, gdzie NN jest i
 
 <br>
 Na powyższym zrzucie ekranu widać odnalezione przez pipeline podatności.
+<br>
+
+<br>
+Raport dla skanowania OWASP ZAP:
+<br>
+<img width="2059" height="1105" alt="image" src="https://github.com/user-attachments/assets/ff937bd1-d3c9-4fe9-838c-25c79c87cd42" />
 <br>
 
 <br>
