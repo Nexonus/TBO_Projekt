@@ -14,33 +14,64 @@ Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Bac
 
 ## Zadanie 1: Projekt i Implementacja Procesu CI/CD
 
-Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Pipeline jest skonfigurowany w pliku `.github/workflows/security-pipeline.yaml` i realizuje podejście **Shift-Left Security**, blokując wdrożenie w przypadku wykrycia zagrożeń.
+Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Pipeline jest skonfigurowany w pliku `.github/workflows/security-pipeline.yaml`. 
 
-### Zastosowane mechanizmy bezpieczeństwa
+Cały proces opiera się na strategii **"Secure by Design"** – wdrożenie (publikacja obrazów) jest możliwe tylko wtedy, gdy wszystkie poprzednie etapy bezpieczeństwa zakończą się sukcesem.
 
-W procesie wykorzystaliśmy podejście wielowarstwowe, implementując następujące skanery:
+---
+
+### 🔄 Przepływ pracy (Pipeline Workflow)
+
+Pipeline składa się z czterech sekwencyjnych etapów (jobs), które gwarantują jakość i bezpieczeństwo kodu:
+
+1.  🛡️ **Static Security** – Analiza statyczna kodu i skanowanie sekretów.
+2.  🐳 **Build & Container Security** – Budowa obrazu Docker oraz jego skanowanie pod kątem podatności OS.
+3.  🔥 **Dynamic Security** – Testy penetracyjne (DAST) na uruchomionej instancji aplikacji.
+4.  📦 **Upload & Publish** – Publikacja zweryfikowanych i bezpiecznych obrazów do DockerHub.
+
+---
+
+### 🛡️ Zastosowane mechanizmy bezpieczeństwa
+
+W procesie wykorzystaliśmy podejście wielowarstwowe (Defense in Depth), implementując następujące narzędzia:
 
 #### 1. Wykrywanie Sekretów (Secret Scanning)
-* **Narzędzie:** `Gitleaks`
+* **Narzędzie:** `Gitleaks` (wersja 8.18.2)
 * **Cel:** Ochrona przed wyciekiem haseł, kluczy API i tokenów do repozytorium kodu.
-* **Działanie:** Skanuje historię commitów w poszukiwaniu wzorców wrażliwych danych.
+* **Działanie:** Skanuje pełną historię commitów w poszukiwaniu wzorców wrażliwych danych. Wykrycie wycieku blokuje pipeline. Raport generowany jest w formacie **SARIF**.
 
 #### 2. Statyczna Analiza Kodu (SAST)
-* **Narzędzie:** `Semgrep` (konfiguracja dla C# i ogólnych reguł bezpieczeństwa)
-* **Cel:** Wykrywanie błędów w kodzie źródłowym (np. SQL Injection, XSS, niebezpieczne funkcje) bez uruchamiania aplikacji.
+* **Narzędzie:** `Semgrep`
+* **Cel:** Wykrywanie błędów w kodzie źródłowym i podatności logicznych bez uruchamiania aplikacji.
+* **Konfiguracja:** Zastosowany zestaw reguł:
+    * `p/owasp-top-ten` oraz `p/cwe-top-25`
+    * Dedykowane skanery pod kątem **SQL Injection** oraz **Command Injection**.
+    * Specjalistyczne reguły dla języka **C#** (`security-code-scan`, `csharp`).
 
 #### 3. Analiza Składników Oprogramowania (SCA - Filesystem)
 * **Narzędzie:** `Trivy` (tryb `fs`)
-* **Cel:** Weryfikacja bibliotek i zależności (frontend/backend) pod kątem znanych podatności (CVE) oraz błędów konfiguracji (Misconfiguration).
+* **Cel:** Weryfikacja bibliotek i zależności w systemie plików (przed budową) pod kątem znanych podatności (CVE), błędów konfiguracji oraz ukrytych sekretów.
 
 #### 4. Bezpieczeństwo Kontenerów (Container Security)
 * **Narzędzie:** `Trivy` (tryb `image`)
-* **Cel:** Skanowanie zbudowanego obrazu Docker (`apd.api`) przed jego wdrożeniem. Sprawdza podatności systemu operacyjnego (Debian/Alpine) oraz warstw obrazu.
+* **Cel:** Skanowanie zbudowanego obrazu Docker `apd.api` przed jego uruchomieniem.
+* **Działanie:** Analiza warstw obrazu pod kątem podatności systemu operacyjnego (**OS vulnerabilities**) oraz pakietów systemowych. Wykrycie błędów na tym etapie blokuje przejście do testów dynamicznych.
 
 #### 5. Dynamiczne Testy Bezpieczeństwa (DAST)
-* **Narzędzie:** `OWASP ZAP` (Zed Attack Proxy)
-* **Cel:** "Atak" na uruchomioną w kontenerach aplikację.
-* **Działanie:** Pipeline uruchamia pełne środowisko (`docker compose up`), a następnie skaner ZAP wykonuje testy penetracyjne na działającym API, szukając błędów konfiguracji nagłówków, wycieków informacji itp.
+* **Narzędzie:** `OWASP ZAP` (Zed Attack Proxy) – **Full Scan**
+* **Cel:** Aktywne testy penetracyjne ("black-box") uruchomionej aplikacji.
+* **Działanie:**
+    * Pipeline uruchamia środowisko przy pomocy `docker compose`.
+    * ZAP wykonuje pełny skan, atakując endpointy API.
+    * Weryfikacja nagłówków bezpieczeństwa, wycieków danych w odpowiedziach HTTP oraz odporności na iniekcje.
+
+#### 6. Publikacja i Dystrybucja (Registry)
+* **Narzędzie:** `DockerHub`
+* **Cel:** Dostarczenie bezpiecznych i zweryfikowanych artefaktów.
+* **Działanie:** Ostatni krok uruchamiany **wyłącznie** po sukcesie wszystkich skanów.
+    * Bezpieczne logowanie przez `DOCKERHUB_TOKEN`.
+    * Publikacja obrazów: **Backend** (`apd.api:latest` lub `apd.api:beta`) oraz **Frontend** (`frontend-latest` lub `frontend-beta`).
+    * Optymalizacja czasu budowania dzięki wykorzystaniu **GitHub Actions Cache** (`type=gha`).
 
 ---
 
@@ -131,14 +162,3 @@ Zaimplementowany pipeline DevSecOps skutecznie realizuje założenia bezpieczeń
 4.  Weryfikujemy ostateczny stan aplikacji "z zewnątrz" (DAST).
 
 Proces jest w pełni zautomatyzowany i blokuje wdrożenie (Exit Code 1) w przypadku wykrycia zagrożeń o poziomie High lub Critical.
-
----
-
-## ⚙️ Uruchomienie projektu lokalnie
-
-Aby uruchomić aplikację lokalnie (wymagany Docker Desktop):
-
-```bash
-git clone [LINK_DO_REPO]
-cd TBO_Projekt
-docker compose up --build

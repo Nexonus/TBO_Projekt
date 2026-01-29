@@ -2,9 +2,7 @@ name: 🛡️ DevSecOps TBO Pipeline
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches-ignore: ["main"]
 
 permissions:
   contents: write
@@ -95,7 +93,7 @@ jobs:
 
     steps:
       - name: 🏷️ Determine Docker Tag
-        run: echo "IMAGE_NAME=apd.api:latest" >> $GITHUB_ENV
+        run: echo "IMAGE_NAME=apd.api:beta" >> $GITHUB_ENV
 
       - name: 🧾 Checkout Code
         uses: actions/checkout@v4
@@ -171,7 +169,7 @@ jobs:
             file: ./Apd.Api/Dockerfile
             push: true
             tags: |
-              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:latest
+              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:beta
             cache-from: type=gha
             cache-to: type=gha,mode=max
   
@@ -182,7 +180,7 @@ jobs:
             file: test_front/test-frontend/Dockerfile
             push: true
             tags: |
-              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:frontend-latest
+              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:frontend-beta
             cache-from: type=gha
             cache-to: type=gha,mode=max
   
