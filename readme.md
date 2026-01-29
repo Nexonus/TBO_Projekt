@@ -10,8 +10,8 @@ Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Bac
 3. **Jarek Jaworski**
 4. **Karol Zębala**
 
-Wyniki uzyskane przez Security Pipeline:
-https://github.com/Nexonus/TBO_Projekt/actions/runs/21416020497/job/61664638973?pr=28
+Realizacja zadania projektowego:
+[Wyniki uzyskane przez Security Pipeline](https://github.com/Nexonus/TBO_Projekt/actions/runs/21416020497/job/61664638973?pr=28)
 ---
 
 ## Zadanie 1: Projekt i Implementacja Procesu CI/CD
