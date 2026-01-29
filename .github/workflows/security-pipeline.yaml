@@ -37,7 +37,7 @@ jobs:
           sudo mv gitleaks /usr/local/bin/gitleaks # Fixing the download architecture over here ^ - JK
 
       - name: 🔑 Gitleaks Secret Scan (Full History)
-        continue-on-error: true
+        continue-on-error: true # This will generate an alert anyways, we want to show that Semgrep will cause the pipeline to fail - JK
         run: |
           gitleaks detect \
             --source=. \
@@ -67,7 +67,7 @@ jobs:
           pip install semgrep
 
       - name: 🔎 Semgrep Full Scan
-        continue-on-error: true
+        continue-on-error: false
         run: |
           semgrep scan \
             --config p/security-code-scan \
@@ -111,7 +111,7 @@ jobs:
         with:
           image-ref: ${{ env.IMAGE_NAME }}
           format: 'table'
-          ignore-unfixed: true
+          ignore-unfixed: false
           vuln-type: 'os,library'
 
   dynamic-security-scan:
