@@ -1,4 +1,4 @@
-name: 🛡️ DevSecOps TBO Pipeline
+name: 🛡️ DevSecOps - Development Pipeline
 
 on:
   push:

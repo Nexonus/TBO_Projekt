@@ -14,7 +14,7 @@ Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Bac
 
 ## Zadanie 1: Projekt i Implementacja Procesu CI/CD
 
-Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Pipeline jest skonfigurowany w pliku `.github/workflows/security-pipeline.yaml`. 
+Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Pipeline jest skonfigurowany w pliku [Prodction Pipeline](.github/workflows/security-pipeline.yaml) oraz [Development Pipeline](.github/workflows/security-pipeline-beta.yaml). 
 
 Cały proces opiera się na strategii **"Secure by Design"** – wdrożenie (publikacja obrazów) jest możliwe tylko wtedy, gdy wszystkie poprzednie etapy bezpieczeństwa zakończą się sukcesem.
 
@@ -142,23 +142,12 @@ Zgodnie z wymaganiami projektu, utworzyliśmy osobną gałąź, na której celow
     Efekt działania:
     ![command-injection](https://scontent-waw2-1.xx.fbcdn.net/v/t1.15752-9/618802918_1561598261625299_4699893866115953101_n.png?_nc_cat=111&ccb=1-7&_nc_sid=9f807c&_nc_ohc=60-G2CheNFIQ7kNvwE6sMan&_nc_oc=AdmwD5kt13BUjwoG7CnQ-OFvXA1MtgEMcJdPmuMSn8I_Yy3vhF_-BkqBzD4GZ0IJwao&_nc_zt=23&_nc_ht=scontent-waw2-1.xx&oh=03_Q7cD4QGQIWaAt95KNov6dSbYxmNT7-xzswqCkacT0v1FV5PINA&oe=69A2F2E4)
 
-
-### Dowód skuteczności (Link do Failed Job)
-
-Poniżej znajduje się link do uruchomienia pipeline'u, który zakończył się błędem (zablokowaniem wdrożenia) po wykryciu powyższych podatności:
-
-🔗 **[LINK DO ZAKŁADKI ACTIONS Z CZERWONYM WYNIKIEM - WKLEJ TUTAJ]**
-
-*(Możesz również dodać screenshot z logów pokazujący czerwoną informację o wykrytych błędach)*
-
 ---
 
 ## Wnioski
 
-Zaimplementowany pipeline DevSecOps skutecznie realizuje założenia bezpieczeństwa. Dzięki zastosowaniu narzędzi na różnych etapach (kod, zależności, obraz docker, działająca aplikacja):
+Zaimplementowany pipeline DevSecOps skutecznie realizuje założenia bezpieczeństwa. Dzięki zastosowaniu narzędzi na różnych etapach:
 1.  Unikamy wdrażania kodu z jawnymi błędami (SAST).
 2.  Eliminujemy przestarzałe i dziurawe biblioteki (SCA).
 3.  Zapewniamy, że kontenery produkcyjne są zgodne z dobrymi praktykami (Container Scan).
-4.  Weryfikujemy ostateczny stan aplikacji "z zewnątrz" (DAST).
-
-Proces jest w pełni zautomatyzowany i blokuje wdrożenie (Exit Code 1) w przypadku wykrycia zagrożeń o poziomie High lub Critical.
+4.  Weryfikujemy ostateczny stan aplikacji (DAST).
