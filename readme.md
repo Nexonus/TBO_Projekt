@@ -20,18 +20,18 @@ Cały proces opiera się na strategii **"Secure by Design"** – wdrożenie (pub
 
 ---
 
-### 🔄 Przepływ pracy (Pipeline Workflow)
+###  Przepływ pracy (Pipeline Workflow)
 
 Pipeline składa się z czterech sekwencyjnych etapów (jobs), które gwarantują jakość i bezpieczeństwo kodu:
 
-1.  🛡️ **Static Security** – Analiza statyczna kodu i skanowanie sekretów.
-2.  🐳 **Build & Container Security** – Budowa obrazu Docker oraz jego skanowanie pod kątem podatności OS.
-3.  🔥 **Dynamic Security** – Testy penetracyjne (DAST) na uruchomionej instancji aplikacji.
-4.  📦 **Upload & Publish** – Publikacja zweryfikowanych i bezpiecznych obrazów do DockerHub.
+1.  **Static Security** – Analiza statyczna kodu i skanowanie sekretów.
+2.  **Build & Container Security** – Budowa obrazu Docker oraz jego skanowanie pod kątem podatności OS.
+3.   **Dynamic Security** – Testy penetracyjne (DAST) na uruchomionej instancji aplikacji.
+4.  **Upload & Publish** – Publikacja zweryfikowanych i bezpiecznych obrazów do DockerHub.
 
 ---
 
-### 🛡️ Zastosowane mechanizmy bezpieczeństwa
+### Zastosowane mechanizmy bezpieczeństwa
 
 W procesie wykorzystaliśmy podejście wielowarstwowe (Defense in Depth), implementując następujące narzędzia:
 
