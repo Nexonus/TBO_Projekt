@@ -11,7 +11,8 @@ Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Bac
 4. **Karol Zębala**
 
 Realizacja zadania projektowego:
-[Wyniki uzyskane przez Security Pipeline](https://github.com/Nexonus/TBO_Projekt/actions/runs/21416020497/job/61664638973?pr=28)
+1. [Gitleaks - Wyciek danych powoduje anulowanie Akcji](https://github.com/Nexonus/TBO_Projekt/pull/31)
+2. [Podatności znalezione przez Security Pipeline](https://github.com/Nexonus/TBO_Projekt/security/code-scanning?query=pr%3A28)
 ---
 
 ## Zadanie 1: Projekt i Implementacja Procesu CI/CD
@@ -145,6 +146,17 @@ Zgodnie z wymaganiami projektu, utworzyliśmy osobną gałąź, na której celow
     ![command-injection](https://scontent-waw2-1.xx.fbcdn.net/v/t1.15752-9/618802918_1561598261625299_4699893866115953101_n.png?_nc_cat=111&ccb=1-7&_nc_sid=9f807c&_nc_ohc=60-G2CheNFIQ7kNvwE6sMan&_nc_oc=AdmwD5kt13BUjwoG7CnQ-OFvXA1MtgEMcJdPmuMSn8I_Yy3vhF_-BkqBzD4GZ0IJwao&_nc_zt=23&_nc_ht=scontent-waw2-1.xx&oh=03_Q7cD4QGQIWaAt95KNov6dSbYxmNT7-xzswqCkacT0v1FV5PINA&oe=69A2F2E4)
 
 ---
+## Security Pipeline:
+Przykładowy alert wygenerowany dla odnalezionej podatności SQL Injection:
+<img width="1362" height="427" alt="image" src="https://github.com/user-attachments/assets/30fdbbe4-a324-407a-aeea-5eac6ea79542" />
+<br>
+<img width="959" height="710" alt="image" src="https://github.com/user-attachments/assets/6c2d8686-8fe4-48f7-81cb-2492b12ba7c6" />
+<br>
+Wykrycie wycieku danych wrażliwych przez Gitleaks:
+<img width="1042" height="559" alt="image" src="https://github.com/user-attachments/assets/9ed28731-0fe0-4e1f-b888-75d874d1cd42" />
+
+
+
 
 ## Wnioski
 
