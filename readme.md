@@ -159,6 +159,18 @@ Dodatkowo, z racji na zabezpieczenie gałęzi Main - możliwe jest włączenie z
 Wykrycie wycieku danych wrażliwych przez Gitleaks:
 <img width="1042" height="559" alt="image" src="https://github.com/user-attachments/assets/9ed28731-0fe0-4e1f-b888-75d874d1cd42" />
 
+<br>
+Widok administratora repozytorium na znalezione w kodzie podatności:
+<img width="2081" height="992" alt="image" src="https://github.com/user-attachments/assets/b8b8ab0f-9c2c-4bd1-967b-119fa2a9b7ce" />
+W zakładce Security / Code Scanning (w filtrze wpisujemy pr:NN, gdzie NN jest indeksem najnowszego PR, np. 30)
+<br>
+Na powyższym zrzucie ekranu widać odnalezione przez pipeline podatności.
+
+<br>
+Dodatkowo, w ramach zadania Pipeline posiada uprawnienia do tworzenia nowych Issues, w których ZAP wskazuje na wykryte przez niego podatności repozytorium:
+<img width="1346" height="1210" alt="image" src="https://github.com/user-attachments/assets/4b7e94f4-e43f-4b7a-9dec-a9cfeaf61876" />
+Na zrzucie widać dwa wątki, jeden to Full Scan dotyczący błędów konfiguracji i podatności usługi, natomiast w Baseline Report znajdziemy informacje o podatnościach od strony ruchu sieciowego.
+<br>
 
 
 
