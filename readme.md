@@ -1,4 +1,4 @@
-<img width="2059" height="1105" alt="image" src="https://github.com/user-attachments/assets/400d1d18-821a-4ddf-a5eb-d6090bc99356" /># Projekt TBO - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
+# Projekt TBO - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
 
 Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Backend: .NET, Frontend: React, Baza: PostgreSQL) oraz implementacja automatycznego pipeline'u wykrywającego podatności bezpieczeństwa.
 
@@ -183,6 +183,11 @@ Na powyższym zrzucie ekranu widać odnalezione przez pipeline podatności.
 Dodatkowo, w ramach zadania Pipeline posiada uprawnienia do tworzenia nowych Issues, w których ZAP wskazuje na wykryte przez niego podatności repozytorium:
 <img width="956" height="1036" alt="image" src="https://github.com/user-attachments/assets/74e821dc-fa17-4b37-8f0d-88a7891091ec" />
 Na zrzucie widać dwa wątki, jeden to Full Scan dotyczący błędów konfiguracji i podatności usługi, natomiast w Baseline Report znajdziemy informacje o podatnościach od strony ruchu sieciowego.
+<br>
+
+<br>
+Raport OWASP ZAP:
+<img width="2059" height="1105" alt="image" src="https://github.com/user-attachments/assets/400d1d18-821a-4ddf-a5eb-d6090bc99356" />
 <br>
 
 ## Jak wygląda kod Pipeline'a?:
