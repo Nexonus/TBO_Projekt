@@ -105,7 +105,7 @@ Zgodnie z wymaganiami projektu, utworzyliśmy osobną gałąź, na której celow
 
 2.  **Command Injection:**
     Drugą podatnością jest command injection - możliwość wykonania dowolnego polecenia na serwerze.
-    Podatny kod:
+    Podatny kod - [Plik do podglądu](https://github.com/Nexonus/TBO_Projekt/blob/test/Apd.Api/Controllers/TestController.cs)
     ```csharp
     [HttpGet("ping")]
     public IActionResult PingHost(string hostname)
@@ -147,24 +147,37 @@ Zgodnie z wymaganiami projektu, utworzyliśmy osobną gałąź, na której celow
 
 ---
 ## Security Pipeline:
+<hr>
+
+<br>
 Przykładowy alert wygenerowany dla odnalezionej podatności SQL Injection:
 <img width="1362" height="427" alt="image" src="https://github.com/user-attachments/assets/30fdbbe4-a324-407a-aeea-5eac6ea79542" />
 <br>
+
+<br>
 Dodatkowo, z racji na zabezpieczenie gałęzi Main - możliwe jest włączenie zmian do repozytorium jedynie w dwóch warunkach:
+<br>
+
 <br>
 1. Właściciel repozytorium klika opcję force merge into main
 2. Uzyskane jest Approve od reszty zespołu (wymagane 4 zatwierdzenia)
 <img width="959" height="710" alt="image" src="https://github.com/user-attachments/assets/6c2d8686-8fe4-48f7-81cb-2492b12ba7c6" />
 <br>
+
+<br>
 Wykrycie wycieku danych wrażliwych przez Gitleaks:
 <img width="1042" height="559" alt="image" src="https://github.com/user-attachments/assets/9ed28731-0fe0-4e1f-b888-75d874d1cd42" />
+<br>
 
 <br>
 Widok administratora repozytorium na znalezione w kodzie podatności:
 <img width="2081" height="992" alt="image" src="https://github.com/user-attachments/assets/b8b8ab0f-9c2c-4bd1-967b-119fa2a9b7ce" />
 W zakładce Security / Code Scanning (w filtrze wpisujemy pr:NN, gdzie NN jest indeksem najnowszego PR, np. 30)
 <br>
+
+<br>
 Na powyższym zrzucie ekranu widać odnalezione przez pipeline podatności.
+<br>
 
 <br>
 Dodatkowo, w ramach zadania Pipeline posiada uprawnienia do tworzenia nowych Issues, w których ZAP wskazuje na wykryte przez niego podatności repozytorium:
@@ -172,7 +185,18 @@ Dodatkowo, w ramach zadania Pipeline posiada uprawnienia do tworzenia nowych Iss
 Na zrzucie widać dwa wątki, jeden to Full Scan dotyczący błędów konfiguracji i podatności usługi, natomiast w Baseline Report znajdziemy informacje o podatnościach od strony ruchu sieciowego.
 <br>
 
+## Jak wygląda kod Pipeline'a?:
+Przykład zaimplementowanego Pipeline'u do kontrolowania historii zmian w repozytorium - [Kod źródłowy](https://github.com/Nexonus/TBO_Projekt/blob/main/.github/workflows/security-pipeline.yaml)
 
+## Błąd Pipeline'u:
+Przykładowy widok od strony administratora dla fail'u pipeline'a - [Action Fail](https://github.com/Nexonus/TBO_Projekt/actions/runs/21493445428)
+
+## Poprawne wykonanie zadania Pipeline'u:
+W przypadku, kiedy Security Pipeline nie wykrywa żadnych podatności w repozytorium, administrator powinien uzyskać następujący widok:
+<img width="2051" height="871" alt="image" src="https://github.com/user-attachments/assets/83a4ef11-9904-4db4-9f64-076c55f05528" />
+<br>
+Przykład z jednego z dostępnych [Actions](https://github.com/Nexonus/TBO_Projekt/actions/runs/21493676867)
+<hr>
 
 ## Wnioski
 
