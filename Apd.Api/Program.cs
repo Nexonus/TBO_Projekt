@@ -136,5 +136,4 @@ app.UseHttpsRedirection();
 
 app.MapGet("/", () => "Hello World!");
 
-await Seeder.CreateRolesAsync(app);
 app.Run();
