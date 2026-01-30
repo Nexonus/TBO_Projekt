@@ -1,4 +1,4 @@
-# Projekt TBO - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
+# Projekt TBO Zespół 4 - Blue Team - Implementacja bezpiecznego procesu CI/CD (DevSecOps)
 
 Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Backend: .NET, Frontend: React, Baza: PostgreSQL) oraz implementacja automatycznego pipeline'u wykrywającego podatności bezpieczeństwa.
 
