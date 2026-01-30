@@ -7,17 +7,14 @@ Celem projektu było stworzenie środowiska DevSecOps dla aplikacji webowej (Bac
 ## Zespół projektowy
 1. **Jan Konarski** - Właściciel repozytorium
 2. **Jakub Szewczyk**
-3. **Jarek Jaworski**
+3. **Jarosław Jaworski**
 4. **Karol Zębala**
 
-Realizacja zadania projektowego:
-1. [Gitleaks - Wyciek danych powoduje anulowanie Akcji](https://github.com/Nexonus/TBO_Projekt/pull/31)
-2. [Podatności znalezione przez Security Pipeline](https://github.com/Nexonus/TBO_Projekt/security/code-scanning?query=pr%3A28)
 ---
 
 ## Zadanie 1: Projekt i Implementacja Procesu CI/CD
 
-Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Pipeline jest skonfigurowany w pliku [Prodction Pipeline](.github/workflows/security-pipeline.yaml) oraz [Development Pipeline](.github/workflows/security-pipeline-beta.yaml). 
+Proces CI/CD został zrealizowany przy użyciu **GitHub Actions**. Wyzwalaczem rozpoczęcia procesu był push lub utworzony pull request. W zależności od gałęzi, z której wykryto wyzwalacz, działanie rozpoczynał odpowiedni pipeline. Zostały one podzielone na: [Production Pipeline](.github/workflows/security-pipeline.yaml) oraz [Development Pipeline](.github/workflows/security-pipeline-beta.yaml). Efektem było utworzenie obrazów front- oraz backendu z tagami beta dla Development Pipeline lub latest dla Production Pipeline. Obrazy importowane były do rejestru obrazów w repozytorium na platformie Dockerhub. 
 
 Cały proces opiera się na strategii **"Secure by Design"** – wdrożenie (publikacja obrazów) jest możliwe tylko wtedy, gdy wszystkie poprzednie etapy bezpieczeństwa zakończą się sukcesem.
 
@@ -28,8 +25,8 @@ Cały proces opiera się na strategii **"Secure by Design"** – wdrożenie (pub
 Pipeline składa się z czterech sekwencyjnych etapów (jobs), które gwarantują jakość i bezpieczeństwo kodu:
 
 1.  **Static Security** – Analiza statyczna kodu i skanowanie sekretów.
-2.  **Build & Container Security** – Budowa obrazu Docker oraz jego skanowanie pod kątem podatności OS.
-3.   **Dynamic Security** – Testy penetracyjne (DAST) na uruchomionej instancji aplikacji.
+2.  **Build & Container Security** – Budowa obrazu Docker oraz jego skanowanie pod kątem podatności.
+3.   **Dynamic Security** – Testy dynamiczne (DAST) na uruchomionej instancji aplikacji.
 4.  **Upload & Publish** – Publikacja zweryfikowanych i bezpiecznych obrazów do DockerHub.
 
 ---
@@ -75,6 +72,11 @@ W procesie wykorzystaliśmy podejście wielowarstwowe (Defense in Depth), implem
     * Bezpieczne logowanie przez `DOCKERHUB_TOKEN`.
     * Publikacja obrazów: **Backend** (`apd.api:latest` lub `apd.api:beta`) oraz **Frontend** (`frontend-latest` lub `frontend-beta`).
     * Optymalizacja czasu budowania dzięki wykorzystaniu **GitHub Actions Cache** (`type=gha`).
+
+### Wyniki działania procesu CI/CD
+Realizacja zadania projektowego:
+1. [Gitleaks - Wyciek danych powoduje anulowanie Akcji](https://github.com/Nexonus/TBO_Projekt/pull/31)
+2. [Podatności znalezione przez Security Pipeline](https://github.com/Nexonus/TBO_Projekt/security/code-scanning?query=pr%3A28)
 
 ---
 
